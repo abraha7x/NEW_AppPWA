@@ -79,7 +79,8 @@ body {
     border-bottom: 1px solid #FB314E;
 }
 
-.service {
+.service,
+.video {
     width: 33%;
     text-align: center;
     float: left;
@@ -98,4 +99,38 @@ body {
 
 .service p {
     color: #444;
+}
+
+#footer {
+    background: #333;
+    padding-top: 5px;
+    padding-bottom: 40px;
+    margin-top: 30px;
+    text-align: center;
+    color: white;
+}
+
+#footer .subheader {
+    color: white;
+}
+
+#network {
+    display: block;
+    width: 216px;
+    margin: 0px auto;
+    list-style: none;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+#network li {
+    float: left;
+    margin-left: 20px;
+    margin-right: 20px;
+    transition: all 300ms;
+}
+
+#network li:hover {
+    opacity: 0.8;
+    transform: scale(1.1, 1.1)
 }
