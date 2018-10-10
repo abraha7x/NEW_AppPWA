@@ -1,81 +1,68 @@
-//Save cache in memory
+//asignar un nombre y versión al cache
+const CACHE_NAME = 'v1_cache_victor_robles';
 
-const CACHE_NAME = "v1_cache_app";
-
-var urlsCache = [
-    './',
-    './style.css',
-    './img/icon-128x128.png',
-    './img/icon-144x144.png',
-    './img/icon-152x152.png',
-    './img/icon-192x192.png',
-    './img/icon-384x384.png',
-    './img/icon-512x512.png',
-    './img/icon-72x72.png',
-    './img/icon-96x96.png',
-    './img/1.png',
-    './img/2.png',
-    './img/3.png',
-    './img/4.png',
-    './img/5.png',
-    './img/6.png',
-    './img/facebook.png',
-    './img/instagram.png',
-    './img/twitter.png'
+// Ficheros a cachear en la aplicación
+urlsToCache = [
+    '../',
+    '../css/styles.css',
+    '../js/main.js',
+    '../img/favicon.png',
+    '../img/1.png',
+    '../img/2.png',
+    '../img/3.png',
+    '../img/4.png',
+    '../img/5.png',
+    '../img/6.png',
+    '../img/facebook.png',
+    '../img/instagram.png',
+    '../img/twitter.png'
 ];
 
-//Install service worker and desk
-
+//durante la fase de instalación, generalmente se almacena en caché los activos estáticos
 self.addEventListener('install', e => {
     e.waitUntil(
         caches.open(CACHE_NAME)
         .then(cache => {
-            return cache.addAll(urlsCache)
-                .then(() => {
-                    self.skipWaiting();
-                })
+            return cache.addAll(urlsToCache)
+                .then(() => self.skipWaiting())
         })
+        .catch(err => console.log('Falló registro de cache', err))
+    )
+})
 
-        .catch(err => {
-            console.log('no se registra cache', err);
-        })
-    );
-
-});
-
-// Activate event
-
+//una vez que se instala el SW, se activa y busca los recursos para hacer que funcione sin conexión
 self.addEventListener('activate', e => {
-    const cacheWhitelist = [CACHE_NAME];
+    const cacheWhitelist = [CACHE_NAME]
 
     e.waitUntil(
         caches.keys()
         .then(cacheNames => {
             return Promise.all(
                 cacheNames.map(cacheName => {
+                    //Eliminamos lo que ya no se necesita en cache
                     if (cacheWhitelist.indexOf(cacheName) === -1) {
-                        return caches.delete(cacheName);
+                        return caches.delete(cacheName)
                     }
                 })
             )
         })
+        // Le indica al SW activar el cache actual
+        .then(() => self.clients.claim())
+    )
+})
 
-        .then(() => {
-            self.clients.claim();
-        })
-    );
-});
-
-//Fetch event
-
+//cuando el navegador recupera una url
 self.addEventListener('fetch', e => {
+    //Responder ya sea con el objeto en caché o continuar y buscar la url real
     e.respondWith(
         caches.match(e.request)
         .then(res => {
             if (res) {
-                return res;
+                //recuperar del cache
+                return res
             }
-            return fetch(e.request);
+            //recuperar de la petición a la url
+            return fetch(e.request)
         })
-    );
-});
+    )
+})
