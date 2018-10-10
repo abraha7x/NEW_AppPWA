@@ -1,13 +1,5 @@
 {
     "name": "AngularPWA",
-    "short_name": "APWA",
-    "theme_color": "#FB314E",
-    "background_color": "#FFF",
-    "orientation": "portrait",
-    "start_url": "./index.html?utm_source=web_app_manifest",
-    "display": "standalone",
-    "Scope": "./",
-    "lang": "es-MX",
     "icons": [{
             "src": "img/icon-72x72.png",
             "sizes": "72x72",
@@ -48,5 +40,9 @@
             "sizes": "512x512",
             "type": "image/png"
         }
-    ]
+    ],
+    "start_url": "/index.html",
+    "display": "standalone",
+    "orientation": "portrait"
+
 }
