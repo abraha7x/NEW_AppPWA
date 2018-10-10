@@ -4,9 +4,9 @@
     "theme_color": "#FB314E",
     "background_color": "#FFF",
     "orientation": "portrait",
+    "start_url": "./index.html?utm_source=web_app_manifest",
     "display": "standalone",
     "Scope": "./",
-    "start_url": "./index.html?utm_source=web_app_manifest",
     "lang": "es-MX",
     "icons": [{
             "src": "img/icon-72x72.png",

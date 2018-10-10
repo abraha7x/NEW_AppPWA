@@ -3,19 +3,26 @@ const CACHE_NAME = 'v1_cache_victor_robles';
 
 // Ficheros a cachear en la aplicación
 urlsToCache = [
-    '../',
-    '../css/styles.css',
-    '../js/main.js',
-    '../img/favicon.png',
-    '../img/1.png',
-    '../img/2.png',
-    '../img/3.png',
-    '../img/4.png',
-    '../img/5.png',
-    '../img/6.png',
-    '../img/facebook.png',
-    '../img/instagram.png',
-    '../img/twitter.png'
+    './',
+    './style.css',
+    './main.js',
+    './img/1.png',
+    './img/2.png',
+    './img/3.png',
+    './img/4.png',
+    './img/5.png',
+    './img/6.png',
+    './img/icon-128x128.png',
+    './img/icon-144x144.png',
+    './img/icon-152x152.png',
+    './img/icon-192x192.png',
+    './img/icon-384x384.png',
+    './img/icon-512x512.png',
+    './img/icon-72x72.png',
+    './img/icon-96x96.png',
+    './img/facebook.png',
+    './img/instagram.png',
+    './img/twitter.png'
 ];
 
 //durante la fase de instalación, generalmente se almacena en caché los activos estáticos
@@ -52,17 +59,29 @@ self.addEventListener('activate', e => {
 })
 
 //cuando el navegador recupera una url
-self.addEventListener('fetch', e => {
-    //Responder ya sea con el objeto en caché o continuar y buscar la url real
-    e.respondWith(
-        caches.match(e.request)
-        .then(res => {
-            if (res) {
-                //recuperar del cache
-                return res
+
+addEventListener('fetch', function(event) {
+    event.respondWith(
+        caches.match(event.request)
+        .then(function(response) {
+            if (response) {
+                return response; // if valid response is found in cache return it
+            } else {
+                return fetch(event.request) //fetch from internet
+                    .then(function(res) {
+                        return caches.open(CACHE_NAME)
+                            .then(function(cache) {
+                                cache.put(event.request.url, res.clone()); //save the response for future
+                                return res; // return the fetched data
+                            })
+                    })
+                    .catch(function(err) { // fallback mechanism
+                        return caches.open(CACHE_CONTAINING_ERROR_MESSAGES)
+                            .then(function(cache) {
+                                return cache.match('/offline.html');
+                            });
+                    });
             }
-            //recuperar de la petición a la url
-            return fetch(e.request)
         })
-    )
-})
+    );
+});
